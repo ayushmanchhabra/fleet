@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Legal disclaimer: Usage of n-ssh on hosts without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program."
+
 USERNAME="$1"
 PASSWORD="$2"
 SRV_FILE="$3"
