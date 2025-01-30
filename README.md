@@ -15,7 +15,7 @@ This script (`n-ssh.sh`) logs into specific IPs defined in a text file (`hosts.t
 
 1. Git clone this repo: `git clone https://github.com/ayushmanchhabra/n-ssh`
 1. Hop into the folder: `cd ./n-ssh`
-1. Execute the script: `bash ./n-ssh.sh secret_username secret_password ./hosts.txt ./task.sh`
+1. Execute the script: `bash ./n-ssh.sh secret_username secret_password ./hosts.csv ./tasks/info/os_name_version.sh`
 
 ## Scenarios
 

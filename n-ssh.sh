@@ -4,12 +4,11 @@ echo "Legal disclaimer: Usage of n-ssh on hosts without prior mutual consent is 
 
 USERNAME="$1"
 PASSWORD="$2"
-SRV_FILE="$3"
+HOST_FILE="$3"
 TASK_FILE="$4"
-SERVERS=()
 
-if [[ ! -f "$SRV_FILE" ]]; then
-    echo "Error: IPs file $SRV_FILE not found.."
+if [[ ! -f "$HOST_FILE" ]]; then
+    echo "Error: Host file $HOST_FILE not found.."
     exit 1
 fi
 
@@ -18,14 +17,42 @@ if [[ ! -f "$TASK_FILE" ]]; then
     exit 1
 fi
 
-while IFS= read -r line; do
-    SERVERS+=("$line")
-done < "$SRV_FILE"
+declare -A array
+readarray -t lines < <(tail -n +2 "$HOST_FILE")
 
-for SERVER in "${SERVERS[@]}"; do
-    if sshpass -p "$PASSWORD" ssh "$USERNAME@$SERVER" 'bash -s' < "$TASK_FILE"; then
-        echo "$SERVER: Login success"
-    else
-        echo "$SERVER: Login failed"
-    fi
+for i in "${!lines[@]}"; do
+    IFS=',' read -r host status output <<< "${lines[i]}"
+    array["$i,0"]="$host"
+    array["$i,1"]="$status"
+    array["$i,2"]="$output"
 done
+
+for ((i=0; i<${#lines[@]}; i++)); do
+    if nmap -p 22 --open ${array[$i,0]} | grep -q "22/open"; then
+        array["$i,1"]="Login success"
+    else
+        array["$i,1"]="Login failure"
+        array["$i,2"]="Host is down or port 22 is not open"
+        continue
+    fi
+    ssh_output=$(sshpass -p "$PASSWORD" ssh "$USERNAME@${array[$i,0]}" 'bash -s' < "$TASK_FILE" 2>&1)
+
+    if [[ $? -eq 0 ]]; then
+        array["$i,1"]="login success"
+    else
+        array["$i,1"]="login failure"
+    fi
+
+    array["$i,2"]="$ssh_output"
+done
+
+{
+    echo "Host,Status,Output"
+
+    for ((i=0; i<${#lines[@]}; i++)); do
+        # Construct each line from the associative array
+        echo "${array[$i,0]},${array[$i,1]},${array[$i,2]}"
+    done
+} > $HOST_FILE
+
+echo -e "\nTask has been run on hosts and output has been saved in host file $HOST_FILE"
