@@ -1,10 +1,10 @@
 # n-ssh
 
-An automation tool for system administrators, security engineers, pen testers and related roles.
+An automation tool for system administrators, security engineers, pen testers and related roles. This tool is similar to Ansible in spirit but takes a shell scripting first approach.
 
 ## Getting Started
 
-This script (`n-ssh.sh`) logs into specific IPs defined in a text file (`hosts.txt`) and executed a user defined task (`task.sh`). Note that the same credentials are used to log into multiple hosts.
+This script (`n-ssh.sh`) logs into specific IPs defined in a text file (`hosts.txt`) and executes a user defined task (for example, `./tasks/info/os_name_version.sh`). Note that the same credentials are used to log into multiple hosts.
 
 ## Prerequisites
 
