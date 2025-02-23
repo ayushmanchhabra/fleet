@@ -15,7 +15,9 @@ This script (`fleet.sh`) logs into specific IPs defined in a text file (`hosts.t
 
 1. Git clone this repo: `git clone https://github.com/ayushmanchhabra/fleet`
 1. Hop into the folder: `cd ./fleet`
-1. Execute the script: `bash ./fleet.sh secret_username secret_password ./hosts.csv ./tasks/info/os_name_version.sh`
+1. Set your password: `export SSHPASS=secret_password`
+1. Execute the script: `bash ./fleet.sh host_username ./hosts.csv ./tasks/info/os_name_version.sh`
+1. Unset your password: `unset SSHPASS`
 
 ## Scenarios
 
